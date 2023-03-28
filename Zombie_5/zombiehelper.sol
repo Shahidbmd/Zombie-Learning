@@ -1,7 +1,10 @@
-pragma solidity >=0.5.0 <0.6.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.17;
 
 import "./zombiefeeding.sol";
-
+import "./safemath.sol";
+using SafeMath32 for uint32;
+using SafeMath16 for uint16;
 contract ZombieHelper is ZombieFeeding {
 
   uint levelUpFee = 0.001 ether;
@@ -13,7 +16,7 @@ contract ZombieHelper is ZombieFeeding {
 
   function withdraw() external onlyOwner {
     address _owner = owner();
-    _owner.transfer(address(this).balance);
+    payable(_owner).transfer(address(this).balance);
   }
 
   function setLevelUpFee(uint _fee) external onlyOwner {
@@ -22,7 +25,7 @@ contract ZombieHelper is ZombieFeeding {
 
   function levelUp(uint _zombieId) external payable {
     require(msg.value == levelUpFee);
-    zombies[_zombieId].level++;
+    zombies[_zombieId].level = zombies[_zombieId].level.add(1);
   }
 
   function changeName(uint _zombieId, string calldata _newName) external aboveLevel(2, _zombieId) onlyOwnerOf(_zombieId) {
