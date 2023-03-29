@@ -22,7 +22,7 @@ contract TokenERC20 is ERC1155,Ownable {
     mapping(uint => uint) public nftCopies;
 
     function setMintingFee(uint _id, uint _mintingFee,uint _noOfCopies) external onlyOwner {
-        require(_id != 0 && _id <= 5,"Id limit is 5");
+        require(_id > 0 && _id <= 5,"Id limit is 5");
         mintingFee[_id] = _mintingFee;
         nftCopies[_id] = _noOfCopies;
     }
@@ -33,8 +33,6 @@ contract TokenERC20 is ERC1155,Ownable {
         require(id != 0 && id <= maxSupply,"max limit is 5");
         require((amount + mintedNFTs[id]) <= nftCopies[id], "Crossed Mint Limit");
         uint tokensToPay = (mintingFee[id]) * amount;
-        require(PayToken.balanceOf(msg.sender) >= tokensToPay,"unsufficient balance");
-        require(PayToken.allowance(account,address(this)) >= tokensToPay ,"invalid minting Fee");
         PayToken.transferFrom(msg.sender, address(this),tokensToPay);
         mintedNFTs[id] += amount;
         _mint(account, id, amount,"");  
@@ -52,8 +50,7 @@ contract TokenERC20 is ERC1155,Ownable {
            tokensToPay += amount;
            mintedNFTs[ids[i]] += amounts[i];
       }
-      require(PayToken.balanceOf(msg.sender) >= tokensToPay,"unsufficient balance");
-      require(PayToken.allowance(msg.sender,address(this)) >= tokensToPay, "invalid minting Fee");
+      
       PayToken.transferFrom(to, address(this),tokensToPay);
       _mintBatch(to, ids, amounts,"");
         
