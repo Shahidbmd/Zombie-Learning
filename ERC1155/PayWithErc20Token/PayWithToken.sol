@@ -13,13 +13,25 @@ contract TokenERC20 is ERC1155,Ownable {
     uint256 constant maxSupply = 5;
 
     //mapping ids to minting Fee
-    mapping(uint => uint) public mintingFee;
+    mapping(uint => uint) private mintingFee;
 
     //mapping and id to number of NFTs minted
-    mapping(uint => uint) public mintedNFTs;
+    mapping(uint => uint) private mintedNFTs;
 
     //mapping ids to nftCopies
-    mapping(uint => uint) public nftCopies;
+    mapping(uint => uint) private nftCopies;
+
+    function mintingFeeIs(uint _id) external view returns(uint) {
+        return mintingFee[_id];
+    }
+
+    function mintedNftsAre(uint _id) external view returns(uint) {
+        return mintedNFTs[_id];
+    }
+    
+    function noOfCopies(uint _id) external view returns(uint) {
+        return nftCopies[_id];
+    }
 
     function setMintingFee(uint _id, uint _mintingFee,uint _noOfCopies) external onlyOwner {
         require(_id > 0 && _id <= 5,"Id limit is 5");
@@ -28,7 +40,7 @@ contract TokenERC20 is ERC1155,Ownable {
     }
 
     function mint(address account, uint256 id, uint256 amount)
-        public
+      external
     {
         require(id != 0 && id <= maxSupply,"max limit is 5");
         require((amount + mintedNFTs[id]) <= nftCopies[id], "Crossed Mint Limit");
@@ -39,7 +51,7 @@ contract TokenERC20 is ERC1155,Ownable {
     }
 
     function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts)
-        public 
+        external
     { require(ids.length != 0 && ids.length < 5 ,"Max Supply is 5");
       
       uint[] memory Nfts = new uint[](ids.length);
