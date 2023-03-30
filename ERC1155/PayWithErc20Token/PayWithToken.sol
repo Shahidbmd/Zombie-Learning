@@ -7,8 +7,8 @@ import "./IERC20.sol";
 
 contract TokenERC20 is ERC1155,Ownable {
     IERC20 PayToken;
-    constructor(IERC20 _payToken) ERC1155("") {
-        PayToken = payToken;
+    constructor(address _payToken) ERC1155("") {
+        PayToken = IERC20(_payToken);
     }
 
     uint256 constant maxSupply = 5;
