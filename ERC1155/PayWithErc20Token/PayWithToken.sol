@@ -6,8 +6,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IERC20.sol";
 
 contract TokenERC20 is ERC1155,Ownable {
-    IERC20 PayToken = IERC20(0x07Cb88b1d6E06a5fd54Ae8d4A71713BF822f4389);
-    constructor() ERC1155("") {}
+    IERC20 PayToken;
+    constructor(IERC20 _payToken) ERC1155("") {
+        PayToken = payToken;
+    }
 
     uint256 constant maxSupply = 5;
 
