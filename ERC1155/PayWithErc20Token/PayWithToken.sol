@@ -35,7 +35,7 @@ contract TokenERC20 is ERC1155,Ownable {
     }
 
     function setMintingFee(uint _id, uint _mintingFee,uint _noOfCopies) external onlyOwner {
-        require(_id > 0 && _id <= 5,"Id limit is 5");
+        require(_id > 0 && _id <= maxSupply,"Id limit is 5");
         mintingFee[_id] = _mintingFee;
         nftCopies[_id] = _noOfCopies;
     }
@@ -53,7 +53,7 @@ contract TokenERC20 is ERC1155,Ownable {
 
     function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts)
         external
-    { require(ids.length != 0 && ids.length < 5 ,"Max Supply is 5");
+    { require(ids.length != 0 && ids.length < maxSupply ,"Max Supply is 5");
       
       uint[] memory Nfts = new uint[](ids.length);
       uint tokensToPay;
